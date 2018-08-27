@@ -1,3 +1,4 @@
+
 var cheerio = require('cheerio');
 var request = require('request');
 var Iconv = require('iconv').Iconv;
@@ -7,71 +8,30 @@ var iconv = new Iconv('CP949', 'UTF-8//TRANSLIT//IGNORE');
 module.exports = function(app) {
     app.get('/crawler', function (req, res) {
         var url = "http://www.kbl.or.kr/stats/team_player_gamerecord.asp?gpart=1&tcode=06&scode=29&gcode=01";
-
         request({url, encoding: null}, function (error, response, body) {
             var htmlDoc = iconv.convert(body).toString();
+            const $ = cheerio.load(htmlDoc); // all => 테이블이 총 4개 들어가있는 배열의 형태라고 보면 됨
+            let all = $('.print_stl table'); // all[0] 첫번째 테이블, all[1] 두번째 테이블, all[2] 세번째 테이블, all[3] 용어설명 테이블
 
-            const $ = cheerio.load(htmlDoc);
-            let all = $('.print_stl table');
-            // all => 테이블이 총 4개 들어가있는 배열의 형태라고 보면 됨
-            // all[0] 첫번째 테이블, all[1] 두번째 테이블, all[2] 세번째 테이블, all[3] 용어설명 테이블
+            allResult = [];
 
-            //첫번째테이블 데이터 출력
-            const $firstTable = cheerio.load(all[0]);
-            // all[0] (첫번째 테이블)을 cheerio를 이용하여 가공할 것임.
-            let firstThead = $firstTable('thead');
-            let firstTr = $firstTable('tbody tr');
-            // firstTr는 <tr></tr> 26개로 이루어져있음.
-            //process.stdout.write($firstTable.text() + " ");
-
-            // <tr></tr> 26개를 각각 모두 반복하며 데이터를 추출. 즉 이 for문은 26번 돌음.
-            for(var i=0; i<firstTr.length; i++) {
-                const $firstTd = cheerio.load(firstTr[i]); // i번째 <tr></tr> 을 $firstTd에 넣음
-                let getTd = $firstTd('td'); // 26개 중 i번째 <tr></tr>에서 14개의 <td></td>를 뽑아서 getTd에 넣음.
-                process.stdout.write((i + 1) + "번째 tr : "); // 번째수 출력
-                for (var j = 0; j < getTd.length; j++) { // 14개의 <td></td>를 돌면서 안의 내용을 추출할거임. 얘는 14번 돌겠지?
-                    const $Td = cheerio.load(getTd[j]); // 14개 중 j번째 <td></td> 안의 내용을 뽑아서 $Td에 넣음.
-                    process.stdout.write($Td.text() + " "); // $Td 안에 든 콘텐츠 출력
+            for (var k = 0; k < 3; k++) {
+                const $Table = cheerio.load(all[k]); // all[n] 총 3개의 테이블 중 n번째 테이블을 가공할 것임.
+                let Thead = $Table('thead tr th'); // thead 안의 tr 안의 14개의 <th></th>를 가져옴.
+                let Tr = $Table('tbody tr'); // Tr는 <tr></tr> 26개로 이루어져있음.
+                for (var i = 0; i < Tr.length; i++) { // <tr></tr> 26개를 각각 모두 반복하며 데이터를 추출. 즉 이 for문은 26번 돌음.
+                    tempDictionary = {}; // 선수 한 명 당 한개의 딕셔너리를 부여받아 데이터를 저장하고, 데이터를 allResult 배열로 넘겨준 뒤, 다시 초기화.
+                    const $fTd = cheerio.load(Tr[i]); // i번째 <tr></tr> 을 $fTd에 넣음
+                    let GetTd = $fTd('td'); // 26개 중 i번째 <tr></tr>에서 14개의 <td></td>를 뽑아서 getTd에 넣음.
+                    for (var j = 0; j < GetTd.length; j++) { // 14개의 <td></td>를 돌면서 안의 내용을 추출할거임. 얘는 14번 돌겠지?
+                        const $Td = cheerio.load(GetTd[j]); // 14개 중 j번째 <td></td> 안의 내용을 뽑아서 $Td에 넣음. 딕셔너리에서 value로 사용됨.
+                        const $Th = cheerio.load(Thead[j]); // 14개 중 j번째 <th></th>를 불러옴. 딕셔너리에서 key로 사용됨.
+                        tempDictionary[$Th.text()] = $Td.text(); // tempDictionary 에 <th> : <td>로 값 추가.
+                    }
+                    allResult.push(tempDictionary); // tempDictionary를 통째로 allResult 배열의 항목으로 추가.
                 }
-                console.log(" "); // 줄바꿈
             }
-            console.log(" ");
-            //secondtable 두번째 테이블 데이터 출력
-            const $secondTable = cheerio.load(all[1]);
-            // all[1] (두번째 테이블)을 cheerio를 이용하여 가공할 것임.
-            let secondThead = $secondTable('thead');
-            let secondTr = $secondTable('tbody tr');
-            // secondTr는 <tr></tr> 26개로 이루어져있음.
-
-            for (var k = 0; k < secondTr.length; k++) {
-                const $secondTd = cheerio.load(secondTr[k]);
-                let secondgetTd = $secondTd('td');
-                process.stdout.write((k + 1) + "번째 tr : ");
-                for (var l = 0; l < secondgetTd.length; l++) {
-                    const $Td = cheerio.load(secondgetTd[l]);
-                    process.stdout.write($Td.text() + " ");
-                }
-                console.log(" "); // 줄바꿈
-            }
-            console.log(" ");
-            //세번째 테이블 데이터 출력
-            const $thirdTable = cheerio.load(all[2]);
-            // all[2] (세번째 테이블)을 cheerio를 이용하여 가공할 것임.
-            //let thirdThead = $thirddTable('thead');
-            let thirdTr = $thirdTable('tbody tr');
-            // secondTr는 <tr></tr> 26개로 이루어져있음.
-
-            for (var p = 0; p < thirdTr.length; p++) {
-                const $thirdTd = cheerio.load(thirdTr[p]);
-                let thirdgetTd = $thirdTd('td');
-                process.stdout.write((p + 1) + "번째 tr : ");
-                for (var u = 0; u < thirdgetTd.length; u++) {
-                    const $Td = cheerio.load(thirdgetTd[u]);
-                    process.stdout.write($Td.text() + " ");
-                }
-                console.log(" "); // 줄바꿈
-            }
-
+            console.log(allResult); // 각 테이블당 26개의 Dictionary가 생성되어 배열에 추가되었음. 테이블이 3개이므로 배열의 길이는 78.
         });
     });
 }
