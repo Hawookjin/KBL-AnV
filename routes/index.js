@@ -31,7 +31,20 @@ module.exports = function(app) {
                     allResult.push(tempDictionary); // tempDictionary를 통째로 allResult 배열의 항목으로 추가.
                 }
             }
-            console.log(allResult); // 각 테이블당 26개의 Dictionary가 생성되어 배열에 추가되었음. 테이블이 3개이므로 배열의 길이는 78.
+            //console.log(allResult); // 각 테이블당 26개의 Dictionary가 생성되어 배열에 추가되었음. 테이블이 3개이므로 배열의 길이는 78.
+
+            array = [];
+            sum=0;
+            for(var i=0; i < allResult.length; i++) {
+               if (array[i % 26] =sum);{
+                    sum++;
+                    var firstCondition = {};
+                    var secondcondition = {};
+                    var op = Object.assign({}, firstCondition, secondcondition);
+                }
+                array.push(op);
+            }
+            console.log(array);
         });
     });
 }
