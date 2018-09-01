@@ -15,7 +15,7 @@ module.exports = function(app) {
 
             allResult = [];
 
-            for (var k = 0; k < 3; k++) {
+            for(var k=0; k<3; k++) {
                 const $Table = cheerio.load(all[k]); // all[n] 총 3개의 테이블 중 n번째 테이블을 가공할 것임.
                 let Thead = $Table('thead tr th'); // thead 안의 tr 안의 14개의 <th></th>를 가져옴.
                 let Tr = $Table('tbody tr'); // Tr는 <tr></tr> 26개로 이루어져있음.
@@ -34,12 +34,26 @@ module.exports = function(app) {
             }
             // allResult[0][0] => 0번 테이블의 0번째 선수 Dictionary {"배번":2 , "선수":김명진 ... }
             // allResult[1][0] => 1번 테이블의 0번째 선수 Dictionary
-
             finalResult = [];
-            for (var k = 0; k < 26; k++) {
+            for(var k=0; k<26; k++) {
                 var temp = Object.assign({}, allResult[0][k], allResult[1][k], allResult[2][k]);
                 finalResult.push(temp);
+                finalResult[k]["Offensive"] = finalResult[k]["REBOUNDS"];
+                delete finalResult[k]["REBOUNDS"];
+                finalResult[k]["Defensive"] = finalResult[k]["RPG"];
+                delete finalResult[k]["RPG"];
+                finalResult[k]["RPG"] = finalResult[k]["Ast"];
+                delete finalResult[k]["Ast"];
+                finalResult[k]["Ast"] = finalResult[k]["APG"];
+                delete finalResult[k]["APG"];
+                finalResult[k]["APG"] = finalResult[k]["w/FT"];
+                delete finalResult[k]["w/FT"];
+                finalResult[k]["w/FT"] = finalResult[k]["w/oFT"];
+                delete finalResult[k]["w/oFT"];
+                finalResult[k]["w/oFT"] = finalResult[k]["Off"];
+                delete finalResult[k]["Off"];
             }
+
             console.log(finalResult[0]);
             // console.log("k=0 " + allResult[0][0]["배번"]);
             // console.log("k=1 " + allResult[1].length);
@@ -47,5 +61,4 @@ module.exports = function(app) {
         });
     });
 }
-
 
