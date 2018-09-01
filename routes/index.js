@@ -19,6 +19,7 @@ module.exports = function(app) {
                 const $Table = cheerio.load(all[k]); // all[n] 총 3개의 테이블 중 n번째 테이블을 가공할 것임.
                 let Thead = $Table('thead tr th'); // thead 안의 tr 안의 14개의 <th></th>를 가져옴.
                 let Tr = $Table('tbody tr'); // Tr는 <tr></tr> 26개로 이루어져있음.
+                allResult[k] = []; // 2차원 배열로 만들어줌.
                 for (var i = 0; i < Tr.length; i++) { // <tr></tr> 26개를 각각 모두 반복하며 데이터를 추출. 즉 이 for문은 26번 돌음.
                     tempDictionary = {}; // 선수 한 명 당 한개의 딕셔너리를 부여받아 데이터를 저장하고, 데이터를 allResult 배열로 넘겨준 뒤, 다시 초기화.
                     const $fTd = cheerio.load(Tr[i]); // i번째 <tr></tr> 을 $fTd에 넣음
@@ -28,23 +29,23 @@ module.exports = function(app) {
                         const $Th = cheerio.load(Thead[j]); // 14개 중 j번째 <th></th>를 불러옴. 딕셔너리에서 key로 사용됨.
                         tempDictionary[$Th.text()] = $Td.text(); // tempDictionary 에 <th> : <td>로 값 추가.
                     }
-                    allResult.push(tempDictionary); // tempDictionary를 통째로 allResult 배열의 항목으로 추가.
+                    allResult[k].push(tempDictionary);
                 }
             }
-            //console.log(allResult); // 각 테이블당 26개의 Dictionary가 생성되어 배열에 추가되었음. 테이블이 3개이므로 배열의 길이는 78.
+            // allResult[0][0] => 0번 테이블의 0번째 선수 Dictionary {"배번":2 , "선수":김명진 ... }
+            // allResult[1][0] => 1번 테이블의 0번째 선수 Dictionary
 
-            array = [];
-            sum=0;
-            for(var i=0; i < allResult.length; i++) {
-               if (array[i % 26] =sum);{
-                    sum++;
-                    var firstCondition = {};
-                    var secondcondition = {};
-                    var op = Object.assign({}, firstCondition, secondcondition);
-                }
-                array.push(op);
+            finalResult = [];
+            for (var k = 0; k < 26; k++) {
+                var temp = Object.assign({}, allResult[0][k], allResult[1][k], allResult[2][k]);
+                finalResult.push(temp);
             }
-            console.log(array);
+            console.log(finalResult[0]);
+            // console.log("k=0 " + allResult[0][0]["배번"]);
+            // console.log("k=1 " + allResult[1].length);
+            // console.log("k=2 " + allResult[2].length);
         });
     });
 }
+
+
