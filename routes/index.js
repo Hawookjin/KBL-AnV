@@ -1,20 +1,20 @@
-
 var cheerio = require('cheerio');
 var request = require('request');
 var Iconv = require('iconv').Iconv;
-var iconv = new Iconv('CP949', 'UTF-8//TRANSLIT//IGNORE');
+var fs = require("fs");
+var iconv = new Iconv('EUC-KR', 'UTF-8//TRANSLIT//IGNORE');
 
-
-module.exports = function(app) {
-    app.get('/crawler', function (req, res) {
-        var url = "http://www.kbl.or.kr/stats/team_player_gamerecord.asp?gpart=1&tcode=06&scode=29&gcode=01";
+function doRequest(url) {
+    return new Promise(function (resolve, reject) {
         request({url, encoding: null}, function (error, response, body) {
+            if(error) {
+                console.log("Request Error! " + error);
+                reject(error);
+            }
             var htmlDoc = iconv.convert(body).toString();
             const $ = cheerio.load(htmlDoc); // all => 테이블이 총 4개 들어가있는 배열의 형태라고 보면 됨
             let all = $('.print_stl table'); // all[0] 첫번째 테이블, all[1] 두번째 테이블, all[2] 세번째 테이블, all[3] 용어설명 테이블
-
             allResult = [];
-
             for(var k=0; k<3; k++) {
                 const $Table = cheerio.load(all[k]); // all[n] 총 3개의 테이블 중 n번째 테이블을 가공할 것임.
                 let Thead = $Table('thead tr th'); // thead 안의 tr 안의 14개의 <th></th>를 가져옴.
@@ -53,12 +53,27 @@ module.exports = function(app) {
                 finalResult[k]["w/oFT"] = finalResult[k]["Off"];
                 delete finalResult[k]["Off"];
             }
-
-            console.log(finalResult[0]);
-            // console.log("k=0 " + allResult[0][0]["배번"]);
-            // console.log("k=1 " + allResult[1].length);
-            // console.log("k=2 " + allResult[2].length);
+            // return 추가 필요
+            resolve();
         });
     });
 }
 
+module.exports = function(app) {
+    app.get('/', function (req, res) {
+        res.end("Hello World\n");
+    });
+
+    app.get('/crawler', async (req, res) => {
+        team = ["06", "10", "16", "30", "35", "50", "55", "60", "65", "70"]; // 임시
+        teamName = {"부산KT소닉붐":"06", "울산모비스피버스":"10", "원주동부프로미":"16","고양오리온스":"30","서울삼성":"35","창원LG":"50","서울SK나이츠":"55","전주KCC이지스":"60","인천전자랜드엘리펀츠":"65","안양KGC인삼공사":"70"};
+        for(var y=31; y>25; y=y-2) { // 17-18시즌, 16-17시즌, 15-16시즌 뽑음.
+            for(var cnt=0; cnt<teamName.length; cnt++) {
+
+                var url = "http://www.kbl.or.kr/stats/team_player_gamerecord.asp?gpart=1&tcode=06&scode=29&gcode=01";
+                await doRequest(url, cnt);
+                // doRequest의 리턴값을 저장할 변수 필요.
+            }
+        }
+    });
+};
