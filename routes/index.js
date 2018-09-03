@@ -4,6 +4,9 @@ var Iconv = require('iconv').Iconv;
 var fs = require("fs");
 var iconv = new Iconv('EUC-KR', 'UTF-8//TRANSLIT//IGNORE');
 
+teamName = {"부산KT소닉붐":"06", "울산모비스피버스":"10", "원주동부프로미":"16","고양오리온스":"30","서울삼성":"35","창원LG":"50","서울SK나이츠":"55","전주KCC이지스":"60","인천전자랜드엘리펀츠":"65","안양KGC인삼공사":"70"};
+yearName = {"2015-2016": "27", "2016-2017:":"29", "2017-2018":"31"};
+
 function doRequest(url) {
     return new Promise(function (resolve, reject) {
         request({url, encoding: null}, function (error, response, body) {
@@ -19,6 +22,7 @@ function doRequest(url) {
                 const $Table = cheerio.load(all[k]); // all[n] 총 3개의 테이블 중 n번째 테이블을 가공할 것임.
                 let Thead = $Table('thead tr th'); // thead 안의 tr 안의 14개의 <th></th>를 가져옴.
                 let Tr = $Table('tbody tr'); // Tr는 <tr></tr> 26개로 이루어져있음.
+                Trlength = Tr.length;
                 allResult[k] = []; // 2차원 배열로 만들어줌.
                 for (var i = 0; i < Tr.length; i++) { // <tr></tr> 26개를 각각 모두 반복하며 데이터를 추출. 즉 이 for문은 26번 돌음.
                     tempDictionary = {}; // 선수 한 명 당 한개의 딕셔너리를 부여받아 데이터를 저장하고, 데이터를 allResult 배열로 넘겨준 뒤, 다시 초기화.
@@ -35,7 +39,7 @@ function doRequest(url) {
             // allResult[0][0] => 0번 테이블의 0번째 선수 Dictionary {"배번":2 , "선수":김명진 ... }
             // allResult[1][0] => 1번 테이블의 0번째 선수 Dictionary
             finalResult = [];
-            for(var k=0; k< 26.length; k++) {
+            for(var k=0; k< Trlength; k++) {
                 var temp = Object.assign({}, allResult[0][k], allResult[1][k], allResult[2][k]);
                 finalResult.push(temp);
                 finalResult[k]["Offensive"] = finalResult[k]["REBOUNDS"];
@@ -54,7 +58,7 @@ function doRequest(url) {
                 delete finalResult[k]["Off"];
             }
             // return 추가 필요
-            resolve();
+            resolve(finalResult);
         });
     });
 }
@@ -65,21 +69,19 @@ module.exports = function(app) {
     });
 
     app.get('/crawler', async (req, res) => {
-        team = ["06", "10", "16", "30", "35", "50", "55", "60", "65", "70"]; // 임시
-        teamName = {"부산KT소닉붐":"06", "울산모비스피버스":"10", "원주동부프로미":"16","고양오리온스":"30","서울삼성":"35","창원LG":"50","서울SK나이츠":"55","전주KCC이지스":"60","인천전자랜드엘리펀츠":"65","안양KGC인삼공사":"70"};
-        teamDictionary={};
-        for(var y=31; y>25; y=y-2) { // 17-18시즌, 16-17시즌, 15-16시즌 뽑음.
-            for(var key in name) {
-
-                var url = "http://www.kbl.or.kr/stats/team_player_gamerecord.asp?gpart=1&tcode=" + teanmName[key]+"&scode" + y.toString() + "&gcode=01";
+        yearDictionary = {};
+        for(year in yearName) { // 17-18시즌, 16-17시즌, 15-16시즌 뽑음.
+            teamDictionary={};
+            for(var key in teamName) {
+                var url = "http://www.kbl.or.kr/stats/team_player_gamerecord.asp?gpart=1&tcode=" + teamName[key]+"&scode" + yearName[year] + "&gcode=01";
                 await doRequest(url);
-                console.log(key + " " + teamName[key]);
+                //console.log(key + " " + teamName[key]);
                 teamValues = await doRequest(url);
-                teamDictionary[key]= teamDictionary;
-                
-
-                // doRequest의 리턴값을 저장할 변수 필요.
+                teamDictionary[key]= teamValues;
             }
+            yearDictionary[year]= teamDictionary;
         }
+        //console.log(yearDictionary);
+        res.json(yearDictionary);
     });
 };
