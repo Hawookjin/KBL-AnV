@@ -35,7 +35,7 @@ function doRequest(url) {
             // allResult[0][0] => 0번 테이블의 0번째 선수 Dictionary {"배번":2 , "선수":김명진 ... }
             // allResult[1][0] => 1번 테이블의 0번째 선수 Dictionary
             finalResult = [];
-            for(var k=0; k<26; k++) {
+            for(var k=0; k< 26.length; k++) {
                 var temp = Object.assign({}, allResult[0][k], allResult[1][k], allResult[2][k]);
                 finalResult.push(temp);
                 finalResult[k]["Offensive"] = finalResult[k]["REBOUNDS"];
@@ -67,11 +67,17 @@ module.exports = function(app) {
     app.get('/crawler', async (req, res) => {
         team = ["06", "10", "16", "30", "35", "50", "55", "60", "65", "70"]; // 임시
         teamName = {"부산KT소닉붐":"06", "울산모비스피버스":"10", "원주동부프로미":"16","고양오리온스":"30","서울삼성":"35","창원LG":"50","서울SK나이츠":"55","전주KCC이지스":"60","인천전자랜드엘리펀츠":"65","안양KGC인삼공사":"70"};
+        teamDictionary={};
         for(var y=31; y>25; y=y-2) { // 17-18시즌, 16-17시즌, 15-16시즌 뽑음.
-            for(var cnt=0; cnt<teamName.length; cnt++) {
+            for(var key in name) {
 
-                var url = "http://www.kbl.or.kr/stats/team_player_gamerecord.asp?gpart=1&tcode=06&scode=29&gcode=01";
-                await doRequest(url, cnt);
+                var url = "http://www.kbl.or.kr/stats/team_player_gamerecord.asp?gpart=1&tcode=" + teanmName[key]+"&scode" + y.toString() + "&gcode=01";
+                await doRequest(url);
+                console.log(key + " " + teamName[key]);
+                teamValues = await doRequest(url);
+                teamDictionary[key]= teamDictionary;
+                
+
                 // doRequest의 리턴값을 저장할 변수 필요.
             }
         }
