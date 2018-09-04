@@ -4,7 +4,7 @@ var Iconv = require('iconv').Iconv;
 var fs = require("fs");
 var iconv = new Iconv('EUC-KR', 'UTF-8//TRANSLIT//IGNORE');
 
-teamName = {"부산KT소닉붐":"06", "울산모비스피버스":"10", "원주동부프로미":"16","고양오리온스":"30","서울삼성":"35","창원LG":"50","서울SK나이츠":"55","전주KCC이지스":"60","인천전자랜드엘리펀츠":"65","안양KGC인삼공사":"70"};
+teamName = {"부산KT소닉붐":"06", "울산모비스피버스":"10", "원주동부프로미":"16","고양오리온오리온스":"30","서울삼성썬더스":"35","창원LG세이커스":"50","서울SK나이츠":"55","전주KCC이지스":"60","인천전자랜드엘리펀츠":"65","안양KGC인삼공사":"70"};
 yearName = {"2015-2016": "27", "2016-2017:":"29", "2017-2018":"31"};
 
 function doRequest(url) {
@@ -74,14 +74,23 @@ module.exports = function(app) {
             teamDictionary={};
             for(var key in teamName) {
                 var url = "http://www.kbl.or.kr/stats/team_player_gamerecord.asp?gpart=1&tcode=" + teamName[key]+"&scode" + yearName[year] + "&gcode=01";
-                await doRequest(url);
+
                 //console.log(key + " " + teamName[key]);
                 teamValues = await doRequest(url);
                 teamDictionary[key]= teamValues;
             }
             yearDictionary[year]= teamDictionary;
         }
-        //console.log(yearDictionary);
         res.json(yearDictionary);
+        json = JSON.stringify(yearDictionary);
+        fs.writeFile('myjsonfile.json', json, 'utf8');
     });
 };
+
+    app.get('/parser', async (req,res) =>{
+        fs.readFile('myjsofile.json', 'utf8', function (err, date) {
+            if (err) throw err;
+            obj = JSON.parse(date);
+            res.json(obj["2017-2018"]["울산모비스피버스"]);
+        });
+    });
