@@ -74,7 +74,7 @@ module.exports = function(app) {
             teamDictionary={};
             for(var key in teamName) {
                 var url = "http://www.kbl.or.kr/stats/team_player_gamerecord.asp?gpart=1&tcode=" + teamName[key]+"&scode" + yearName[year] + "&gcode=01";
-
+                await doRequest(url);
                 //console.log(key + " " + teamName[key]);
                 teamValues = await doRequest(url);
                 teamDictionary[key]= teamValues;
@@ -85,12 +85,25 @@ module.exports = function(app) {
         json = JSON.stringify(yearDictionary);
         fs.writeFile('myjsonfile.json', json, 'utf8');
     });
-};
 
     app.get('/parser', async (req,res) =>{
-        fs.readFile('myjsofile.json', 'utf8', function (err, date) {
+        fs.readFile('myjsonfile.json', 'utf8', function (err, date) {
             if (err) throw err;
             obj = JSON.parse(date);
-            res.json(obj["2017-2018"]["울산모비스피버스"]);
+            for(var i=0;i <(obj["2015-2016"]["부산KT소닉붐"]).length; i++) {
+                dar = obj["2015-2016"]["부산KT소닉붐"][i]["2P"];
+            }
+            data ={};
+            for (key in teamName) {
+                var temp = 0;
+                for(var j=0;j<(obj["2015-2016"][key]).length; j++);{
+                    temp += Number(obj["2015-2016"][key][j]["2P"]);
+                }
+            }
+            res.render('index', {
+                title: "Test",
+                object: obj
+            })
         });
     });
+};
