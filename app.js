@@ -1,3 +1,4 @@
+// LOAD express
 var express = require('express');
 var app = express();
 app.use(express.static('public'));
@@ -16,4 +17,6 @@ var server = app.listen(port, function() {
     console.log("Express Server has started on port " + port);
 });
 
-var router = require('./routes/')(app);
+var routes = require('./routes/index')(app);
+var crawler = require('./routes/crawler')(app);
+var parser = require('./routes/parser')(app);
