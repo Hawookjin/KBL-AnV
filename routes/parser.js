@@ -38,12 +38,28 @@ function efg(year) {
         var sum = 0;
         for(var c=0; c<(obj[year][key]).length; c++){
             var temp =0;
-            temp = ((Number(obj[year][key][c]["2P"]) + Number(obj[year][key][c]["3P"])) +(Number(obj[year][key][c]["3P"]) *1.5));
-            temp /= (Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"]));
-            temp *= 100;
-            sum += temp;
+            temp = ((Number(obj[year][key][c]["2P"]) + Number(obj[year][key][c]["3P"])) + (Number(obj[year][key][c]["3P"])*1.5));
+            temp /= (Number(obj[year][key][c]["2P"]) + Number(obj[year][key][c]["3P"]));
+            // temp *= 100;
+            //sum += temp;
         }
-        data[key] = sum/((obj[year][key]).length);
+        data[key] = temp/((obj[year][key]).length);
+    }
+    return data;
+}
+
+function TS(year) {
+    var data = {};
+    for (key in teamName){
+        var sum = 0;
+        for(var c=0; c<(obj[year][key]).length; c++){
+            var temp =0;
+            temp = (Number(obj[year][key][c]["PTS"]));
+            temp /= (2*((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"])) + (0.44*(Number(obj[year][key][c]["FTA"])))));
+            // temp ;
+            // sum += temp;
+        }
+        data[key] = temp/((obj[year][key]).length);
     }
     return data;
 }
@@ -87,7 +103,7 @@ module.exports = function(app) {
         });
     });
 
-
+    //efg
     app.get('/parser3', async (req, res) => {
         fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
             if (err) throw err;
@@ -102,6 +118,25 @@ module.exports = function(app) {
                 teamStatData: Object.values(teamData),
                 teamNameData: Object.keys(teamData),
                 item: "efg",
+                year: year
+            });
+        });
+    });
+    // TS%
+    app.get('/parser4', async (req, res) => {
+        fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
+            if (err) throw err;
+            obj = JSON.parse(data);
+            var year = yearName["1617"];
+            teamData = TS(year);
+
+
+            res.render('index', {
+                title: "Test",
+                object: obj,
+                teamStatData: Object.values(teamData),
+                teamNameData: Object.keys(teamData),
+                item: "TS%",
                 year: year
             });
         });

@@ -34,34 +34,34 @@ function doRequest(url) {
                         tempDictionary[$Th.text()] = $Td.text(); // tempDictionary 에 <th> : <td>로 값 추가.
                     }
                     allResult[k].push(tempDictionary);
-        }
-    }
-    // allResult[0][0] => 0번 테이블의 0번째 선수 Dictionary {"배번":2 , "선수":김명진 ... }
-    // allResult[1][0] => 1번 테이블의 0번째 선수 Dictionary
-    finalResult = [];
-    for(var k=0; k<TrLength; k++) {
-        var temp = Object.assign({}, allResult[0][k], allResult[1][k], allResult[2][k]);
-        finalResult.push(temp);
+                }
+            }
+            // allResult[0][0] => 0번 테이블의 0번째 선수 Dictionary {"배번":2 , "선수":김명진 ... }
+            // allResult[1][0] => 1번 테이블의 0번째 선수 Dictionary
+            finalResult = [];
+            for(var k=0; k<TrLength; k++) {
+                var temp = Object.assign({}, allResult[0][k], allResult[1][k], allResult[2][k]);
+                finalResult.push(temp);
 
-        finalResult[k]["Offensive"] = finalResult[k]["REBOUNDS"];
-        delete finalResult[k]["REBOUNDS"];
-        finalResult[k]["Defensive"] = finalResult[k]["RPG"];
-        delete finalResult[k]["RPG"];
-        finalResult[k]["RPG"] = finalResult[k]["Ast"];
-        delete finalResult[k]["Ast"];
-        finalResult[k]["Ast"] = finalResult[k]["APG"];
-        delete finalResult[k]["APG"];
-        finalResult[k]["APG"] = finalResult[k]["w/FT"];
-        delete finalResult[k]["w/FT"];
-        finalResult[k]["w/FT"] = finalResult[k]["w/oFT"];
-        delete finalResult[k]["w/oFT"];
-        finalResult[k]["w/oFT"] = finalResult[k]["Off"];
-        delete finalResult[k]["Off"];
-    }
-    // return 추가 필요
-    resolve(finalResult);
-});
-});
+                finalResult[k]["Offensive"] = finalResult[k]["REBOUNDS"];
+                delete finalResult[k]["REBOUNDS"];
+                finalResult[k]["Defensive"] = finalResult[k]["RPG"];
+                delete finalResult[k]["RPG"];
+                finalResult[k]["RPG"] = finalResult[k]["Ast"];
+                delete finalResult[k]["Ast"];
+                finalResult[k]["Ast"] = finalResult[k]["APG"];
+                delete finalResult[k]["APG"];
+                finalResult[k]["APG"] = finalResult[k]["w/FT"];
+                delete finalResult[k]["w/FT"];
+                finalResult[k]["w/FT"] = finalResult[k]["w/oFT"];
+                delete finalResult[k]["w/oFT"];
+                finalResult[k]["w/oFT"] = finalResult[k]["Off"];
+                delete finalResult[k]["Off"];
+            }
+            // return 추가 필요
+            resolve(finalResult);
+        });
+    });
 }
 
 module.exports = function(app) {
