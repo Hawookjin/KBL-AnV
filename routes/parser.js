@@ -80,6 +80,22 @@ function TOR(year) {
     return data;
 }
 
+function Ast(year) {
+    var data = {};
+    for (key in teamName){
+        var sum = 0;
+        for(var c=0; c<(obj[year][key]).length; c++){
+            var temp =0;
+            temp = Number(obj[year][key][c]["Ast"]);
+            temp /= ((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"])) + ((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"]))*0.44) + Number(obj[year][key][c]["Ast"]) + Number(obj[year][key][c]["TO"]));
+            temp *= 100;
+            //sum += temp;
+        }
+        data[key] = temp/((obj[year][key]).length);
+    }
+    return data;
+}
+
 module.exports = function(app) {
     app.get('/parser/:content', async (req, res) => {
         fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
@@ -172,6 +188,25 @@ module.exports = function(app) {
                 teamStatData: Object.values(teamData),
                 teamNameData: Object.keys(teamData),
                 item: "TOR",
+                year: year
+            });
+        });
+    });
+    //Ast
+    app.get('/parser6', async (req, res) => {
+        fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
+            if (err) throw err;
+            obj = JSON.parse(data);
+            var year = yearName["1617"];
+            teamData = Ast(year);
+
+
+            res.render('index', {
+                title: "Test",
+                object: obj,
+                teamStatData: Object.values(teamData),
+                teamNameData: Object.keys(teamData),
+                item: "Ast",
                 year: year
             });
         });
