@@ -38,10 +38,8 @@ function efg(year) {
         var sum = 0;
         for(var c=0; c<(obj[year][key]).length; c++){
             var temp =0;
-            temp = ((Number(obj[year][key][c]["2P"]) + Number(obj[year][key][c]["3P"])) + (Number(obj[year][key][c]["3P"])*1.5));
-            temp /= (Number(obj[year][key][c]["2P"]) + Number(obj[year][key][c]["3P"]));
-            // temp *= 100;
-            //sum += temp;
+            temp = ((Number(obj[year][key][c]["2P"]) + Number(obj[year][key][c]["3P"])) + (Number(obj[year][key][c]["3P"])*0.5));
+            temp = temp / (Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"]));
         }
         data[key] = temp/((obj[year][key]).length);
     }
@@ -54,10 +52,8 @@ function TS(year) {
         var sum = 0;
         for(var c=0; c<(obj[year][key]).length; c++){
             var temp =0;
-            temp = (Number(obj[year][key][c]["PTS"]));
+            temp = Number(obj[year][key][c]["PTS"]);
             temp /= (2*((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"])) + (0.44*(Number(obj[year][key][c]["FTA"])))));
-            // temp *= 100 ;
-            // sum += temp;
         }
         data[key] = temp/((obj[year][key]).length);
     }
@@ -70,10 +66,8 @@ function TOR(year) {
         var sum = 0;
         for(var c=0; c<(obj[year][key]).length; c++){
             var temp =0;
-            temp = Number(obj[year][key][c]["TO"]);
+            temp = (Number(obj[year][key][c]["TO"])*100);
             temp /= ((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"])) + ((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"]))*0.44) + Number(obj[year][key][c]["Ast"]) + Number(obj[year][key][c]["TO"]));
-             temp *= 100;
-            //sum += temp;
         }
         data[key] = temp/((obj[year][key]).length);
     }
@@ -86,10 +80,8 @@ function Ast(year) {
         var sum = 0;
         for(var c=0; c<(obj[year][key]).length; c++){
             var temp =0;
-            temp = Number(obj[year][key][c]["Ast"]);
+            temp =(Number(obj[year][key][c]["Ast"])*100);
             temp /= ((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"])) + ((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"]))*0.44) + Number(obj[year][key][c]["Ast"]) + Number(obj[year][key][c]["TO"]));
-            temp *= 100;
-            //sum += temp;
         }
         data[key] = temp/((obj[year][key]).length);
     }
@@ -116,51 +108,39 @@ module.exports = function(app) {
         });
     });
 
-    //Usg 만 뽑아보는 함수 보류
-    app.get('/parser2', async (req, res) => {
+    // parser2/text 모든 함수 뿌리기
+    app.get('/parser2/:text', async (req, res) => {
         fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
             if (err) throw err;
             obj = JSON.parse(data);
+            var tit;// 타이틀 이름
+            var text = req.params.text;
             var year = yearName["1617"];
-            teamData = usg(year);
-
-            res.render('index', {
-                title: "Test",
-                object: obj,
-                teamStatData: Object.values(teamData),
-                teamNameData: Object.keys(teamData),
-                item: "usg",
-                year: year
-            });
-        });
-    });
-
-    //efg
-    app.get('/parser3', async (req, res) => {
-        fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
-            if (err) throw err;
-            obj = JSON.parse(data);
-            var year = yearName["1617"];
-            teamData = efg(year);
-
-
-            res.render('index', {
-                title: "Test",
-                object: obj,
-                teamStatData: Object.values(teamData),
-                teamNameData: Object.keys(teamData),
-                item: "efg",
-                year: year
-            });
-        });
-    });
-    // TS%
-    app.get('/parser4', async (req, res) => {
-        fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
-            if (err) throw err;
-            obj = JSON.parse(data);
-            var year = yearName["1617"];
-            teamData = TS(year);
+            if(text=="usg"){
+                array=usg(year);
+                tit="USG↓";
+                teamData = usg(year);
+            }
+            else if(text=="efg"){
+                array=efg(year);
+                tit="efg↑";//타이틀 이름
+                teamData = efg(year);//값
+            }
+            else if(text=="TS"){
+                array=TS(year);
+                tit="TS%↑";
+                teamData = TS(year);
+            }
+            else if(text=="TOR"){
+                array=TOR(year);
+                tit="TOR%↓";
+                teamData = TOR(year);
+            }
+            else if(text=="Ast"){
+                array=Ast(year);
+                tit="Ast↑";
+                teamData = Ast(year);
+            }
 
 
             res.render('index', {
@@ -168,47 +148,86 @@ module.exports = function(app) {
                 object: obj,
                 teamStatData: Object.values(teamData),
                 teamNameData: Object.keys(teamData),
-                item: "TS%",
+                item: tit,
                 year: year
             });
         });
     });
-    // TOR
-    app.get('/parser5', async (req, res) => {
-        fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
-            if (err) throw err;
-            obj = JSON.parse(data);
-            var year = yearName["1617"];
-            teamData = TOR(year);
 
-
-            res.render('index', {
-                title: "Test",
-                object: obj,
-                teamStatData: Object.values(teamData),
-                teamNameData: Object.keys(teamData),
-                item: "TOR",
-                year: year
-            });
-        });
-    });
-    //Ast
-    app.get('/parser6', async (req, res) => {
-        fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
-            if (err) throw err;
-            obj = JSON.parse(data);
-            var year = yearName["1617"];
-            teamData = Ast(year);
-
-
-            res.render('index', {
-                title: "Test",
-                object: obj,
-                teamStatData: Object.values(teamData),
-                teamNameData: Object.keys(teamData),
-                item: "Ast",
-                year: year
-            });
-        });
-    });
+    // // efg
+    // app.get('/parser3', async (req, res) => {
+    //     fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
+    //         if (err) throw err;
+    //         obj = JSON.parse(data);
+    //         var year = yearName["1617"];
+    //         teamData = efg(year);
+    //
+    //
+    //         res.render('index', {
+    //             title: "Test",
+    //             object: obj,
+    //             teamStatData: Object.values(teamData),
+    //             teamNameData: Object.keys(teamData),
+    //             item: "efg",
+    //             year: year
+    //         });
+    //     });
+    // });
+    // // TS%
+    // app.get('/parser4', async (req, res) => {
+    //     fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
+    //         if (err) throw err;
+    //         obj = JSON.parse(data);
+    //         var year = yearName["1617"];
+    //         teamData = TS(year);
+    //
+    //
+    //         res.render('index', {
+    //             title: "Test",
+    //             object: obj,
+    //             teamStatData: Object.values(teamData),
+    //             teamNameData: Object.keys(teamData),
+    //             item: "TS%",
+    //             year: year
+    //         });
+    //     });
+    // });
+    // // TOR
+    // app.get('/parser5', async (req, res) => {
+    //     fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
+    //         if (err) throw err;
+    //         obj = JSON.parse(data);
+    //         var year = yearName["1617"];
+    //         teamData = TOR(year);
+    //
+    //
+    //         res.render('index', {
+    //             title: "Test",
+    //             object: obj,
+    //             teamStatData: Object.values(teamData),
+    //             teamNameData: Object.keys(teamData),
+    //             item: "TOR",
+    //             year: year
+    //         });
+    //     });
+    // });
+    // // Ast
+    // app.get('/parser/Ast', async (req, res) => {
+    //     fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
+    //         if (err) throw err;
+    //         obj = JSON.parse(data);
+    //         var year = yearName["1617"];
+    //         teamData = Ast(year);
+    //
+    //
+    //         res.render('index', {
+    //             title: "Test",
+    //             object: obj,
+    //             teamStatData: Object.values(teamData),
+    //             teamNameData: Object.keys(teamData),
+    //             item: "Ast",
+    //             year: year
+    //         });
+    //     });
+    // });
 };
