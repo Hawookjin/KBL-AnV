@@ -18,9 +18,8 @@ function usg(year) {
     var data = {};
     var re = /(\w+)\S(\w+)\S(\w+)/; // 시간 00:00:00 정규표현식
     for(key in teamName) { // key = 팀이름
-        var sum = 0;
+        var sum = 0; var temp = 0;
         for(var c=0; c<(obj[year][key]).length; c++) {
-            var temp = 0;
             var str = obj[year][key][1]["Min."];
             var playTime = Number(str.replace(re, "$2")) + Number(str.replace(re, "$1"))*60;
             temp = ((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"])) + (Number(obj[year][key][c]["FTA"])*0.44) + (Number(obj[year][key][c]["Ast"])*0.33) + Number(obj[year][key][c]["TO"]))*40;
@@ -31,13 +30,12 @@ function usg(year) {
     }
     return data;
 }
-
 function efg(year) {
     var data = {};
+    sum=0;
     for (key in teamName){
-        var sum = 0;
+         var temp =0;
         for(var c=0; c<(obj[year][key]).length; c++){
-            var temp =0;
             temp = ((Number(obj[year][key][c]["2P"]) + Number(obj[year][key][c]["3P"])) + (Number(obj[year][key][c]["3P"])*0.5));
             temp = temp / (Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"]));
         }
@@ -45,27 +43,23 @@ function efg(year) {
     }
     return data;
 }
-
 function TS(year) {
     var data = {};
     for (key in teamName){
-        var sum = 0;
+         var temp =0;
         for(var c=0; c<(obj[year][key]).length; c++){
-            var temp =0;
             temp = Number(obj[year][key][c]["PTS"]);
-            temp /= (2*((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"])) + (0.44*(Number(obj[year][key][c]["FTA"])))));
+            temp = temp/ (2*((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"])) + (0.44*(Number(obj[year][key][c]["FTA"])))));
         }
         data[key] = temp/((obj[year][key]).length);
     }
     return data;
 }
-
 function TOR(year) {
     var data = {};
     for (key in teamName){
-        var sum = 0;
+        var sum = 0; var temp =0;
         for(var c=0; c<(obj[year][key]).length; c++){
-            var temp =0;
             temp = (Number(obj[year][key][c]["TO"])*100);
             temp /= ((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"])) + ((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"]))*0.44) + Number(obj[year][key][c]["Ast"]) + Number(obj[year][key][c]["TO"]));
         }
@@ -73,13 +67,11 @@ function TOR(year) {
     }
     return data;
 }
-
 function Ast(year) {
     var data = {};
     for (key in teamName){
-        var sum = 0;
+        var temp =0;
         for(var c=0; c<(obj[year][key]).length; c++){
-            var temp =0;
             temp =(Number(obj[year][key][c]["Ast"])*100);
             temp /= ((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"])) + ((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"]))*0.44) + Number(obj[year][key][c]["Ast"]) + Number(obj[year][key][c]["TO"]));
         }
@@ -87,35 +79,90 @@ function Ast(year) {
     }
     return data;
 }
-
+function PPG(year) {
+    var data = {};
+    for (key in teamName) {
+        var temp = 0;
+        for (var c = 0; c < (obj[year][key]).length; c++) {
+            temp += Number(obj[year][key][c]["PPG"]);
+        }
+        data[key] = temp;
+    }
+    return data;
+}
+function RPG(year) {
+    var data = {};
+    for (key in teamName) {
+        var temp = 0;
+        for (var c = 0; c < (obj[year][key]).length; c++) {
+            temp += Number(obj[year][key][c]["RPG"]);
+        }
+        data[key] = temp;
+    }
+    return data;
+}
+function STL(year) {
+    var data = {};
+    for (key in teamName) {
+        var temp = 0;
+        for (var c = 0; c < (obj[year][key]).length; c++) {
+            temp += Number(obj[year][key][c]["STL"])
+        }
+        data[key] = temp ;
+    }
+    return data;
+}
+function Offensive(year) {
+    var data = {};
+    for (key in teamName) {
+        var temp = 0;
+        for (var c = 0; c < (obj[year][key]).length; c++) {
+            temp += Number(obj[year][key][c]["Offensive"]);
+        }
+        data[key] = temp;
+    }
+    return data;
+}
+function Defensive(year) {
+    var data = {};
+    for (key in teamName) {
+        var temp = 0;
+        for (var c = 0; c < (obj[year][key]).length; c++) {
+            temp += Number(obj[year][key][c]["Defensive"]);
+        }
+        data[key] = temp;
+    }
+    return data;
+}
 module.exports = function(app) {
-    app.get('/parser/:content', async (req, res) => {
-        fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
-            if (err) throw err;
-            obj = JSON.parse(data);
-            var item = req.params.content;
-            var year = yearName["1617"];
-            teamAllData = getStatData(item, year);
-            // teamAllData = usg(year);
-            res.render('index', {
-                title: "Test",
-                object: obj,
-                teamStatData: Object.values(teamAllData),
-                teamNameData: Object.keys(teamAllData),
-                item: item,
-                year: year
-            })
-        });
-    });
+    // app.get('/parser/:content', async (req, res) => {
+    //     fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
+    //         if (err) throw err;
+    //         obj = JSON.parse(data);
+    //         var item = req.params.content;
+    //         var year = yearName["1718"];
+    //         teamAllData = getStatData(item, year);
+    //         // teamAllData = usg(year);
+    //         res.render('index', {
+    //             title: "Test",
+    //             object: obj,
+    //             teamStatData: Object.values(teamAllData),
+    //             teamNameData: Object.keys(teamAllData),
+    //             item: item,
+    //             year: year
+    //         })
+    //     });
+    // });
 
     // parser2/text 모든 함수 뿌리기
     app.get('/parser2/:text', async (req, res) => {
         fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
             if (err) throw err;
             obj = JSON.parse(data);
+            // console.log(obj["2015-2016"]["안양KGC인삼공사"]);
             var tit;// 타이틀 이름
             var text = req.params.text;
-            var year = yearName["1617"];
+            var year = yearName["1718"];
             if(text=="usg"){
                 array=usg(year);
                 tit="USG↓";
@@ -141,8 +188,31 @@ module.exports = function(app) {
                 tit="Ast↑";
                 teamData = Ast(year);
             }
-
-
+            else if(text=="PPG"){
+                array=PPG(year);
+                tit="PPG↑";
+                teamData= PPG(year);
+            }
+            else if(text=="RPG"){
+                array=RPG(year);
+                tit="RPG↑";
+                teamData= RPG(year);
+            }
+            else if(text=="STL"){
+                array=STL(year);
+                tit="STL↑";
+                teamData= STL(year);
+            }
+            else if(text=="Offensive"){
+                array=Offensive(year);
+                tit="Offensive↑";
+                teamData= Offensive(year);
+            }
+            else if(text=="Defensive"){
+                array=Defensive(year);
+                tit="Defensive↑";
+                teamData= Defensive(year);
+            }
             res.render('index', {
                 title: "Test",
                 object: obj,
@@ -231,3 +301,6 @@ module.exports = function(app) {
     //     });
     // });
 };
+
+
+
