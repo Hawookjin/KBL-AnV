@@ -6,13 +6,39 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 </head>
 <style>
+    body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
     #testChart {
-        max-width: 1600px;
+        width: 100%;
     }
 </style>
 <body>
+<form method="POST" action="/parser">
+    <select name="pickedYear" class="form-control">
+        <option value="1516">2015-2016</option>
+        <option value="1617">2016-2017</option>
+        <option value="1718">2017-2018</option>
+    </select>
+    <select name="pickedItem" class="form-control">
+        <option value="usg">USG</option>
+        <option value="efg">EFG%</option>
+        <option value="TS">TS%</option>
+        <option value="TOR">TOR</option>
+        <option value="Ast">AST</option>
+        <option value="PPG">PPG</option>
+        <option value="RPG">RPG</option>
+        <option value="STL">STL</option>
+        <option value="Offensive">Defensive</option>
+        <option value="Defensive">Offensive</option>
+    </select>
+    <button type="submit"></button>
+</form>
 <canvas id="testChart"></canvas>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
@@ -21,42 +47,33 @@
     let myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['부산KT소닉붐',
-                '울산모비스피버스',
-                '원주동부프로미',
-                '고양오리온스',
-                '서울삼성',
-                '창원LG',
-                '서울SK나이츠',
-                '전주KCC이지스',
-                '인천전자랜드엘리펀츠',
-                '안양KGC인삼공사'   ],
+            labels:<%- JSON.stringify(teamNameData) %>,
             datasets: [{
                 label: '<%= item %>',
                 data: [<%= teamStatData %>],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
-                    'rgba(255, 255, 0, 0.2)',
-                    'rgba(0, 128, 0, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
-                    'rgba(186, 85, 211, 0.2)',
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(255, 255, 0, 0.2)',
-                    'rgba(0, 128, 0, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
-                    'rgba(186, 85, 211, 0.2)'
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)'
                 ],
                 borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(255, 215, 0, 1)',
-                    'rgba(0, 128, 0, 1)',
+                    'rgba(255,99,132,1)',
                     'rgba(54, 162, 235, 1)',
-                    'rgba(186, 85, 211, 1)',
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(255, 215, 0, 1)',
-                    'rgba(0, 128, 0, 1)',
                     'rgba(54, 162, 235, 1)',
-                    'rgba(186, 85, 211, 1)'
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(54, 162, 235, 1)'
                 ],
                 borderWidth: 1
             }]
