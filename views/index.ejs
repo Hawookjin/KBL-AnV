@@ -3,49 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <title>KBL Data Visualization Project <%= title %></title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <style>
-    body {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-    }
-    #testChart {
-        width: 100%;
-    }
 </style>
 <body>
-<form method="GET" action="/parser">
-    <select name="pickedYear" class="form-control">
-        <option value="1516">2015-2016</option>
-        <option value="1617">2016-2017</option>
-        <option value="1718">2017-2018</option>
-    </select>
-    <select name="pickedItem" class="form-control">
-        <option value="usg">USG%</option>
-        <option value="efg">EFG%</option>
-        <option value="TS">TS%</option>
-        <option value="TOR">TOR</option>
-        <option value="Ast">AST</option>
-        <option value="PPG">PPG</option>
-        <option value="RPG">RPG</option>
-        <option value="STL">STL</option>
-        <option value="Offensive">Defensive</option>
-        <option value="Defensive">Offensive</option>
-    </select>
-    <button type="submit"></button>
-</form>
-<canvas id="testChart"></canvas>
-
+<div class="box">
+    <div class="header">
+        <h1>한국프로농구 데이터시각화 프로젝트</h1>
+        <h4>시곡중학교 3학년 하욱진</h4>
+    </div>
+    <div class="section">
+        <div class="article menu">
+            <form method="GET" action="/parser">
+                <select name="pickedYear" class="form-control">
+                    <option value="1516">2015-2016</option>
+                    <option value="1617">2016-2017</option>
+                    <option value="1718">2017-2018</option>
+                </select>
+                <select name="pickedItem" class="form-control">
+                    <option value="usg">USG</option>
+                    <option value="efg">EFG%</option>
+                    <optmion value="TS">TS%</optmion>
+                    <option value="TOR">TOR</option>
+                    <option value="Ast">AST</option>
+                    <option value="PPG">PPG</option>
+                    <option value="RPG">RPG</option>
+                    <option value="STL">STL</option>
+                    <option value="Offensive">Defensive</option>
+                    <option value="Defensive">Offensive</option>
+                </select>
+                <button type="submit" class="btn btn-default">검색하기</button>
+            </form>
+        </div>
+        <div class="article content">
+            <canvas id="mainChart"></canvas>
+        </div>
+    </div>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 <script>
-    let ctx = document.querySelector('#testChart').getContext('2d');
+    let ctx = document.querySelector('#mainChart').getContext('2d');
     let myChart = new Chart(ctx, {
-        type: 'bar',
+        type: 'horizontalBar',
         data: {
             labels:<%- JSON.stringify(teamNameData) %>,
             datasets: [{
@@ -53,27 +56,27 @@
                 data: [<%= teamStatData %>],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 255, 0, 0.2)',
+                    'rgba(0, 128, 0, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
+                    'rgba(186, 85, 211, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 255, 0, 0.2)',
+                    'rgba(0, 128, 0, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(54, 162, 235, 0.2)'
+                    'rgba(186, 85, 211, 0.2)'
                 ],
                 borderColor: [
-                    'rgba(255,99,132,1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 215, 0, 1)',
+                    'rgba(0, 128, 0, 1)',
                     'rgba(54, 162, 235, 1)',
+                    'rgba(186, 85, 211, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 215, 0, 1)',
+                    'rgba(0, 128, 0, 1)',
                     'rgba(54, 162, 235, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(54, 162, 235, 1)'
+                    'rgba(186, 85, 211, 1)'
                 ],
                 borderWidth: 1
             }]
@@ -88,8 +91,11 @@
             },
             title: {
                 display: true,
-                text: "<%= item %>" + " of " + "<%= year %>",
-                fontSize: 18
+                text:  "<%= year %>" + " " + "<%= item %>" ,
+                fontSize: 20,
+                fontColor: '#222',
+                fontFamily: 'Noto Sans KR',
+
             }
         }
     }); // end chart obj

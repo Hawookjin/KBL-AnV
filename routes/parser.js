@@ -5,12 +5,6 @@ teamName = {"부산KT소닉붐":"06", "울산모비스피버스":"10", "원주�
 yearName = {"1516":"2015-2016", "1617":"2016-2017", "1718":"2017-2018"};
 
 module.exports = function(app) {
-    app.post('/parser', async (req, res) => {
-        res.redirect(303, url.format({
-            pathname: "/parser",
-            body: req.body
-        }));
-    });
     app.get('/parser', async (req, res) => {
         fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
             if (err) throw err;
