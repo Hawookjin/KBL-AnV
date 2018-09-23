@@ -6,7 +6,6 @@ yearName = {"1516":"2015-2016", "1617":"2016-2017", "1718":"2017-2018"};
 
 module.exports = function(app) {
     app.post('/parser', async (req, res) => {
-        console.log(req.body);
         res.redirect(303, url.format({
             pathname: "/parser",
             body: req.body
@@ -16,21 +15,17 @@ module.exports = function(app) {
         fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
             if (err) throw err;
             obj = JSON.parse(data);
-            var text = "";
-            var year = "";
+            var text = req.query.pickedItem;
+            var year = yearName[req.query.pickedYear];
             teamData = {};
             tit= "";
-            console.log(req.body);
-            if(req.query.pickedYear && req.query.pickedItem) {
-                var text = req.query.pickedYear;
-                var year = req.query.pickedItem;
-            }
-            else if(text=="usg"){
+            if(text=="usg"){
                 tit="USG↓";
                 teamData = func.usg(year);
+                console.log(teamData);
             } else if(text=="efg"){
                 tit="efg↑";//타이틀 이름
-                teamData = func.efg(year);//값
+                teamData = func.efg(year);
             } else if(text=="TS"){
                 tit="TS%↑";
                 teamData = func.TS(year);

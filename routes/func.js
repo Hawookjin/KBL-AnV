@@ -18,12 +18,12 @@
 
     this.efg = function(year) {
         var data = {};
-        sum = 0;
         for (key in teamName) {
             var temp = 0;
             for (var c = 0; c < (obj[year][key]).length; c++) {
                 temp = ((Number(obj[year][key][c]["2P"]) + Number(obj[year][key][c]["3P"])) + (Number(obj[year][key][c]["3P"]) * 0.5));
                 temp = temp / (Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"]));
+                // sum = sum + temp;
             }
             data[key] = temp / ((obj[year][key]).length);
         }
@@ -43,19 +43,22 @@
         return data;
     }
 
-    this.TOR = function(year) {
+    this.TOR = function (year) {
         var data = {};
-        for (key in teamName) {
-            var sum = 0;
-            var temp = 0;
-            for (var c = 0; c < (obj[year][key]).length; c++) {
-                temp = (Number(obj[year][key][c]["TO"]) * 100);
-                temp /= ((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"])) + ((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"])) * 0.44) + Number(obj[year][key][c]["Ast"]) + Number(obj[year][key][c]["TO"]));
+        for (key in teamName){
+            var sum = 0; var temp =0;
+            console.log(key + " : " );
+            for(var c=0; c<(obj[year][key]).length; c++){
+                temp = Number((Number(obj[year][key][c]["TO"]) * 100) / Number(((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"])) + ((Number(obj[year][key][c]["2PA"]) + Number(obj[year][key][c]["3PA"])) * 0.44) + Number(obj[year][key][c]["Ast"]) + Number(obj[year][key][c]["TO"]))));
+                sum = sum + temp;
+                process.stdout.write(temp + " ");
             }
-            data[key] = temp / ((obj[year][key]).length);
+            console.log(" ");
+            // data[key] = temp/((obj[year][key]).length);
+            data[key] = sum;
         }
         return data;
-    }
+    };
 
     this.Ast = function(year) {
         var data = {};
