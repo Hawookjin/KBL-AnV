@@ -44,6 +44,9 @@ module.exports = function(app) {
             } else if(text=="Defensive"){
                 tit="Defensive↑";
                 teamData= func.Defensive(year);
+            }else if(text=="Efficiency") {
+                tit = "Efficiency↑";
+                teamData = func.Efficiency(year);
             } else {
                 tit = "";
                 teamData = {"Err" : 0};
