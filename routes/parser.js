@@ -1,7 +1,7 @@
 var fs = require("fs");
 var func = require("./func");
 var url = require('url');
-teamName = {"부산KT소닉붐":"06", "울산모비스피버스":"10", "원주동부프로미":"16","고양오리온스":"30","서울삼성":"35","창원LG":"50","서울SK나이츠":"55","전주KCC이지스":"60","인천전자랜드엘리펀츠":"65","안양KGC인삼공사":"70"};
+teamName = {"부산KT소닉붐":"06", "울산현대모비스피버스":"10", "원주동부프로미":"16","고양오리온오리온스":"30","서울삼성썬더스":"35","창원LG세이커스":"50","서울SK나이츠":"55","전주KCC이지스":"60","인천전자랜드엘리펀츠":"65","안양KGC인삼공사":"70"};
 yearName = {"1516":"2015-2016", "1617":"2016-2017", "1718":"2017-2018"};
 
 module.exports = function(app) {
@@ -44,15 +44,15 @@ module.exports = function(app) {
             } else if(text=="Defensive"){
                 tit="Defensive↑";
                 teamData= func.Defensive(year);
-            }else if(text=="Efficiency") {
-                tit = "Efficiency↑";
-                teamData = func.Efficiency(year);
+            }else if(text=="KBLEfficiency") {
+                tit = "KBL Efficiency↑";
+                teamData = func.KBLEfficiency(year);
             } else {
                 tit = "";
                 teamData = {"Err" : 0};
             }
             res.render('index', {
-                title: "Test",
+                title: "KBL-AnV",
                 object: obj,
                 teamStatData: Object.values(teamData),
                 teamNameData: Object.keys(teamData),
