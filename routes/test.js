@@ -15,7 +15,7 @@ module.exports = function(app) {
             for(var i=0; i<(obj[year][text]).length; i++) {
                 sum += Number(obj[year][text][i][index]);
             }
-            console.log(index + "의 합 : " + sum);
+            
         });
     });
 };

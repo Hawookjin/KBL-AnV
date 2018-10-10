@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -15,11 +16,11 @@
         <h1>한국프로농구 데이터시각화 프로젝트 v.0.23</h1>
     </div>
     <div class="nav">
-        <button class="btn btn-default active" onclick="location.href = './'">팀별</button>
-        <button class="btn btn-default"  onclick="location.href = './player'">선수별</button>
+        <button class="btn btn-default" onclick="location.href = './'">팀별</button>
+        <button class="btn btn-default active"  onclick="location.href = './player'">선수별</button>
     </div>
     <div class="section">
-        <h2>팀별 데이터 지표</h2>
+        <h2>선수별 데이터 지표</h2>
         <div class="article menu">
             <form method="GET" action="/">
                 <select name="pickedYear" class="form-control">
@@ -28,6 +29,7 @@
                     <option value="1718">2017-2018 시즌</option>
                 </select>
                 <select name="pickedItem" class="form-control">
+                    <option value="usg">USG</option>
                     <option value="efg">EFG%</option>
                     <optmion value="TS">TS%</optmion>
                     <option value="TOR">TOR</option>
@@ -46,7 +48,7 @@
                 <h3><%= teamYear %>  <%= teamIndex %> </h3>
                 <h5><%= teamIndexDescription %></h5>
             </div>
-            <canvas id="mainChart"></canvas>
+            <canvas id="radar-chart" width="800" height="600"></canvas>
         </div>
     </div>
     <div class="footer">
@@ -58,47 +60,38 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 <script>
-    let ctx = document.querySelector('#mainChart').getContext('2d');
-    let myChart = new Chart(ctx, {
-        type: 'bar',
+    new Chart(document.getElementById("radar-chart"), {
+        type: 'radar',
         data: {
-            labels:<%- JSON.stringify(teamNameData) %>,
-            datasets: [{
-                label: '<%= teamIndex %>',
-                data: [<%= teamStatData %>],
-                backgroundColor: [
-                    'rgba(160, 160, 160, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(100,100,100,0.9)',
-                    'rgba(100,100,100,0.9)',
-                    'rgba(100,100,100,0.9)',
-                    'rgba(100,100,100,0.9)',
-                    'rgba(100,100,100,0.9)',
-                    'rgba(100,100,100,0.9)',
-                    'rgba(100,100,100,0.9)',
-                    'rgba(100,100,100,0.9)',
-                    'rgba(100,100,100,0.9)',
-                    'rgba(100,100,100,0.9)'
-                ],
-                borderWidth: 1
-            }]
+            labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
+            datasets: [
+                {
+                    label: "1950",
+                    fill: true,
+                    backgroundColor: "rgba(179,181,198,0.2)",
+                    borderColor: "rgba(179,181,198,1)",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "rgba(179,181,198,1)",
+                    data: [8.77,55.61,21.69,6.62,6.82]
+                }, {
+                    label: "2050",
+                    fill: true,
+                    backgroundColor: "rgba(255,99,132,0.2)",
+                    borderColor: "rgba(255,99,132,1)",
+                    pointBorderColor: "#fff",
+                    pointBackgroundColor: "rgba(255,99,132,1)",
+                    pointBorderColor: "#fff",
+                    data: [25.48,54.16,7.61,8.06,4.45]
+                }
+            ]
         },
         options: {
-            legend: {
-                display: false
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true
-                    }
-                }]
-            },
-
+            title: {
+                display: true,
+                text: 'Distribution in % of world population'
+            }
         }
-    }); // end chart obj
-
+    });
 </script>
 </body>
 </html>

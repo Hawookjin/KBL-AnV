@@ -1,64 +1,54 @@
-var fs = require("fs");
-var func = require("./func");
-var url = require('url');
-teamName = {"부산KT소닉붐":"06", "울산현대모비스피버스":"10", "원주동부프로미":"16","고양오리온오리온스":"30","서울삼성썬더스":"35","창원LG세이커스":"50","서울SK나이츠":"55","전주KCC이지스":"60","인천전자랜드엘리펀츠":"65","안양KGC인삼공사":"70"};
-yearName = {"1516":"2015-2016", "1617":"2016-2017", "1718":"2017-2018"};
+// author : Wookjin Ha
+// github : github.com/Hawookjin/
+var teamFunction = require("./teamFunction");
 
-module.exports = function(app) {
-    app.get('/parser', async (req, res) => {
-        fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
-            if (err) throw err;
-            obj = JSON.parse(data);
-            var text = req.query.pickedItem;
-            var year = yearName[req.query.pickedYear];
-            teamData = {};
-            tit= "";
-            if(text=="usg"){
-                tit="USG↓";
-                teamData = func.usg(year);
-                console.log(teamData);
-            } else if(text=="efg"){
-                tit="efg↑";//타이틀 이름
-                teamData = func.efg(year);
-            } else if(text=="TS"){
-                tit="TS%↑";
-                teamData = func.TS(year);
-            } else if(text=="TOR"){
-                tit="TOR%↓";
-                teamData = func.TOR(year);
-            } else if(text=="Ast"){
-                tit="Ast↑";
-                teamData = func.Ast(year);
-            } else if(text=="PPG"){
-                tit="PPG↑";
-                teamData= func.PPG(year);
-            } else if(text=="RPG"){
-                tit="RPG↑";
-                teamData= func.RPG(year);
-            } else if(text=="STL"){
-                tit="STL↑";
-                teamData= func.STL(year);
-            } else if(text=="Offensive"){
-                tit="Offensive↑";
-                teamData= func.Offensive(year);
-            } else if(text=="Defensive"){
-                tit="Defensive↑";
-                teamData= func.Defensive(year);
-            }else if(text=="KBLEfficiency") {
-                tit = "KBL Efficiency↑";
-                teamData = func.KBLEfficiency(year);
-            } else {
-                tit = "";
-                teamData = {"Err" : 0};
-            }
-            res.render('index', {
-                title: "KBL-AnV",
-                object: obj,
-                teamStatData: Object.values(teamData),
-                teamNameData: Object.keys(teamData),
-                item: tit,
-                year: year
-            })
-        });
-    });
+this.getTeamData = function(index, obj) {
+    var indexTitle, teamData, indexDescription;
+    if (index == "efg") {
+        indexTitle = "efg↑";//타이틀 이름
+        teamData = teamFunction.efg(obj);
+        indexDescription = "3점슛이 일반 야투보다 넣기 힘들다는 점과 성공시 팀에 기여하는 기여도가 3점슛이 더 높다는 점을 감안해 3점슛에 보정을 두어 슈팅 효율성을 나타내는 지표이다.";
+    } else if (index == "TS") {
+        indexTitle = "TS%↑";
+        teamData = teamFunction.TS(obj);
+        indexDescription = "선수의 슛팅 성공확률을 나타내는 지표이다.";
+    } else if (index == "TOR") {
+        indexTitle = "TOR%↓";
+        teamData = teamFunction.TOR(obj);
+        indexDescription = "팀 선수들의 실책 평균을 나타낸 지표이다.";
+    } else if (index == "Ast") {
+        indexTitle = "Ast↑";
+        teamData = teamFunction.Ast(obj);
+        indexDescription = "골대 근처에서 바로 득점할 기회가 있는 같은 팀 선수에게 패스하는 빈도를 나타내는 지표이다."
+    } else if (index == "PPG") {
+        indexTitle = "PPG↑";
+        teamData = teamFunction.PPG(obj);
+        indexDescription = "평균득점";
+    } else if (index == "RPG") {
+        indexTitle = "RPG↑";
+        teamData = teamFunction.RPG(obj);
+        indexDescription = "리바운드 평균";
+    } else if (index == "STL") {
+        indexTitle = "STL↑";
+        teamData = teamFunction.STL(obj);
+        indexDescription = "스틸 평균";
+    } else if (index == "Offensive") {
+        indexTitle = "Offensive↑";
+        teamData = teamFunction.Offensive(obj);
+        indexDescription = "공격 리바운드 평균";
+    } else if (index == "Defensive") {
+        indexTitle = "Defensive↑";
+        teamData = teamFunction.Defensive(obj);
+        indexDescription = "수비 리바운드 평균";
+    } else if (index == "KBLEfficiency") {
+        indexTitle = "KBL Efficiency↑";
+        teamData = teamFunction.KBLEfficiency(obj);
+        indexDescription = "선수 공헌도(출전시간이 길면 상당히 유리하고 빅맨에게 상당히 유리한 스탯이다)";
+    } else {
+        indexTitle = "";
+        teamData = {"Err": 0};
+        indexDescription = "";
+    }
+
+    return [indexTitle, teamData, indexDescription];
 };

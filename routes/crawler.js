@@ -1,3 +1,6 @@
+// author : Wookjin Ha
+// github : github.com/Hawookjin/
+
 var cheerio = require('cheerio');
 var request = require('request');
 var Iconv = require('iconv').Iconv;
@@ -28,7 +31,7 @@ function doRequest(url) {
                     tempDictionary = {}; // 선수 한 명 당 한개의 딕셔너리를 부여받아 데이터를 저장하고, 데이터를 allResult 배열로 넘겨준 뒤, 다시 초기화.
                     const $fTd = cheerio.load(Tr[i]); // i번째 <tr></tr> 을 $fTd에 넣음
                     let GetTd = $fTd('td'); // 26개 중 i번째 <tr></tr>에서 14개의 <td></td>를 뽑아서 getTd에 넣음.
-                    for (var j = 0; j < GetTd.length; j++) { // 14개의 <td></td>를 돌면서 안의 내용을 추출할거임. 얘는 14번 돌겠지?
+                    for (var j = 0; j < GetTd.length; j++) { // 14개의 <td></td>를 돌면서 안의 내용을 추출할거임. 얘는 14번 돔
                         const $Td = cheerio.load(GetTd[j]); // 14개 중 j번째 <td></td> 안의 내용을 뽑아서 $Td에 넣음. 딕셔너리에서 value로 사용됨.
                         const $Th = cheerio.load(Thead[j]); // 14개 중 j번째 <th></th>를 불러옴. 딕셔너리에서 key로 사용됨.
                         tempDictionary[$Th.text()] = $Td.text(); // tempDictionary 에 <th> : <td>로 값 추가.
@@ -58,7 +61,6 @@ function doRequest(url) {
                 finalResult[k]["w/oFT"] = finalResult[k]["Off"];
                 delete finalResult[k]["Off"];
             }
-            // return 추가 필요
             resolve(finalResult);
         });
     });
@@ -70,7 +72,6 @@ module.exports = function(app) {
         for (year in yearName) { // 17-18시즌, 16-17시즌, 15-16시즌 뽑음.
             teamDictionary = {};
             for (key in teamName) {
-                // var url = "http://www.kbl.or.kr/stats/team_player_gamerecord.asp?gpart=1&tcode=06&scode=29&gcode=01";
                 var url = "http://www.kbl.or.kr/stats/team_player_gamerecord.asp?gpart=1&tcode=" + teamName[key] + "&scode=" + yearName[year] + "&gcode=01";
                 teamValues = await doRequest(url);
                 teamDictionary[key] = teamValues;

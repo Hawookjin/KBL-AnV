@@ -1,7 +1,7 @@
 {
   "name": "kbl-anv",
   "version": "1.0.0",
-  "description": "KBL Analysis and Visualization",
+  "description": "Korea Basketball Data Visualization Project",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
