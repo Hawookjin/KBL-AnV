@@ -7,15 +7,15 @@ module.exports = function(app) {
     app.get('/test', async (req, res) => {
         fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
             if (err) throw err;
-            obj = JSON.parse(data);
-            var text = "안양KGC인삼공사"; // "" 안 부분 직접 써주기
-            var year = yearName["1516"]; // "" 안 부분 직접 써주기
-            var index = "FTA"; // "" 안 부분 직접 써주기
-            var sum = 0;
-            for(var i=0; i<(obj[year][text]).length; i++) {
-                sum += Number(obj[year][text][i][index]);
-            }
-            
+             obj = JSON.parse(data);
+            // var text = "안양KGC인삼공사"; // "" 안 부분 직접 써주기
+            // var year = yearName["1516"]; // "" 안 부분 직접 써주기
+            // var index = "FTA"; // "" 안 부분 직접 써주기
+            // var sum = 0;
+            // for(var i=0; i<(obj[year][text]).length; i++) {
+            //     sum += Number(obj[year][text][i][index]);
+            // }
+            res.json(obj)
         });
     });
 };

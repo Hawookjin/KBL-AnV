@@ -22,3 +22,4 @@ var server = app.listen(port, function() {
 
 var routes = require('./routes/index')(app);
 var crawler = require('./routes/crawler')(app);
+var test = require('./routes/test')(app);

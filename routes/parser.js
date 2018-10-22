@@ -1,17 +1,19 @@
 // author : Wookjin Ha
 // github : github.com/Hawookjin/
+
 var teamFunction = require("./teamFunction");
+var Playerfuntion = require("./playerfunc");
 
 this.getTeamData = function(index, obj) {
     var indexTitle, teamData, indexDescription;
-    if (index == "efg") {
-        indexTitle = "efg↑";//타이틀 이름
-        teamData = teamFunction.efg(obj);
+    if (index == "EFG") {
+        indexTitle = "EFG↑";//타이틀 이름
+        teamData = teamFunction.EFG(obj);
         indexDescription = "3점슛이 일반 야투보다 넣기 힘들다는 점과 성공시 팀에 기여하는 기여도가 3점슛이 더 높다는 점을 감안해 3점슛에 보정을 두어 슈팅 효율성을 나타내는 지표이다.";
     } else if (index == "TS") {
         indexTitle = "TS%↑";
         teamData = teamFunction.TS(obj);
-        indexDescription = "선수의 슛팅 성공확률을 나타내는 지표이다.";
+        indexDescription = "팀의 슛팅 성공확률을 나타내는 지표이다.";
     } else if (index == "TOR") {
         indexTitle = "TOR%↓";
         teamData = teamFunction.TOR(obj);
@@ -40,15 +42,30 @@ this.getTeamData = function(index, obj) {
         indexTitle = "Defensive↑";
         teamData = teamFunction.Defensive(obj);
         indexDescription = "수비 리바운드 평균";
-    } else if (index == "KBLEfficiency") {
-        indexTitle = "KBL Efficiency↑";
-        teamData = teamFunction.KBLEfficiency(obj);
-        indexDescription = "선수 공헌도(출전시간이 길면 상당히 유리하고 빅맨에게 상당히 유리한 스탯이다)";
     } else {
         indexTitle = "";
         teamData = {"Err": 0};
         indexDescription = "";
     }
-
     return [indexTitle, teamData, indexDescription];
 };
+
+
+// this.getPlayerData = function(Player) {
+//     this.Player = function (year, obj) {
+//         var data = {};
+//         for (year in yearName) {
+//             Y = yearName[year];
+//             console.log(Y);
+//             for (key in teamName) {
+//                 var temp = [];
+//                 // console.log(Y);
+//                 for (var c = 0; c < (obj[Y][key]).length; c++) {
+//                     temp.push(obj[Y][key][c]["선수"]);
+//                 }
+//                 data[key] = temp;
+//             }
+//         }
+//         return data;
+//     };
+// }

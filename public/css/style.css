@@ -137,3 +137,22 @@ div.footer h5 {
     width: 100%;
     letter-spacing: -0.8px;
 }
+
+div.article .dis button {
+    width: auto;
+    background-color:white;
+    border-radius: 0px!important;
+    -webkit-appearance: none;
+    border: 1px solid #555!important;
+    margin-bottom: 4px;
+    padding-right: 8px;
+    padding-left: 8px;
+}
+div.article .dis button.active {
+    background-color: #444;
+    color: white;
+}
+div.article h5.teamName {
+    background-color: white;
+    margin-top: 10px;
+}
