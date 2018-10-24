@@ -72,18 +72,18 @@
     new Chart(document.getElementById("radar-chart"), {
         type: 'radar',
         data: {
-            labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
+            labels: ["G(게임수)", "공격:2P(2점슛개수) 수비:OFF(공격리바운드개수)", "공격:3P(3점슛개수) 수비:DEF(수비리바운드개수)", "공격:FT(자유투개수) 수비:STL(스틸개수)", "공격:Ast(어시스트) 수비:BS(블락개수)"],
             datasets: [
                 {
-                    label: "1950",
+                    label: "공격",
                     fill: true,
                     backgroundColor: "rgba(179,181,198,0.2)",
                     borderColor: "rgba(179,181,198,1)",
                     pointBorderColor: "#fff",
                     pointBackgroundColor: "rgba(179,181,198,1)",
-                    data: [8.77,55.61,21.69,6.62,6.82]
+                    data: [<%= %>]
                 }, {
-                    label: "2050",
+                    label: "수비",
                     fill: true,
                     backgroundColor: "rgba(255,99,132,0.2)",
                     borderColor: "rgba(255,99,132,1)",
@@ -97,7 +97,7 @@
         options: {
             title: {
                 display: true,
-                text: 'Distribution in % of world population'
+                text: '선수 스텟'
             }
         }
     });

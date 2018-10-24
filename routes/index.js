@@ -34,22 +34,26 @@ module.exports = function(app) {
         fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
             var obj = JSON.parse(data);
             // for (var year in yearName) {
-            playerWithTeam = {};
-            year = "2015-2016";
-            for (var key in teamName) {
-                temp = [];
-                for (var c = 0; c < (obj[year][key]).length; c++) {
-                    // temp += (obj[year][key][c]["선수"]);
-                    temp.push(obj[year][key][c]["선수"]);
+            var yearWithTeam = {};
+            var years = ["2015-2016", "2016-2017", "2017-2018"];
+            for (var year in years) {
+                var y = years[year];
+                var playerWithTeam = {};
+                for (var key in teamName) {
+                    var temp = [];
+                    for (var c = 0; c < (obj[y][key]).length; c++) {
+                        temp.push(obj[y][key][c]["선수"]);
+                    }
+                    playerWithTeam[key] = temp;
                 }
-                playerWithTeam[key] = temp;
+                yearWithTeam[y] = playerWithTeam;
             }
             // }
             res.render('player', {
                 title: "한국프로농구 데이터시각화 프로젝트",
                 teamYear: 2,
                 teamIndex: 3,
-                teamIndexDescription: playerWithTeam,
+                tiD: yearWithTeam,
             });
         });
     });

@@ -86,7 +86,7 @@ div.article select{
     -webkit-appearance: none;
     border: 1px solid #777!important;
 }
-div.article button {
+div.article button#make {
     border-radius: 1px!important;
     -webkit-appearance: none;
     border: 1px solid #777!important;
@@ -140,7 +140,6 @@ div.footer h5 {
 
 div.article .dis button {
     width: auto;
-    background-color:white;
     border-radius: 0px!important;
     -webkit-appearance: none;
     border: 1px solid #555!important;
@@ -155,4 +154,51 @@ div.article .dis button.active {
 div.article h5.teamName {
     background-color: white;
     margin-top: 10px;
+}
+ul.nav {
+    margin-top: 30px;
+}
+ul.nav-tabs {
+    border-bottom: 1px solid #444;
+}
+ul.nav li a {
+    color: #444!important;
+    font-family: 'Noto Sans KR', sans-serif!important;
+    letter-spacing: -0.8px!important;
+}
+ul.nav li a {
+    border: 1px solid #444!important;
+    border-radius: 0;
+}
+ul.nav li.active a {
+    background-color: #444!important;
+    color: #fff!important;
+}
+ul.nav li.active a:hover {
+    background-color: #444!important;
+    color: #fff!important;
+}
+
+button.play {
+    border: 1px solid #444!important;
+    border-radius: 0px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    padding: 6px 9px;
+}
+button.play:hover {
+    background-color: #ddd;
+}
+div.users {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.teamtab {
+    margin-top: 14px!important;
+}
+.teamcontent {
+    padding-top: 7px!important;
 }

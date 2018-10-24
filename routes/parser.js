@@ -50,22 +50,3 @@ this.getTeamData = function(index, obj) {
     return [indexTitle, teamData, indexDescription];
 };
 
-
-// this.getPlayerData = function(Player) {
-//     this.Player = function (year, obj) {
-//         var data = {};
-//         for (year in yearName) {
-//             Y = yearName[year];
-//             console.log(Y);
-//             for (key in teamName) {
-//                 var temp = [];
-//                 // console.log(Y);
-//                 for (var c = 0; c < (obj[Y][key]).length; c++) {
-//                     temp.push(obj[Y][key][c]["선수"]);
-//                 }
-//                 data[key] = temp;
-//             }
-//         }
-//         return data;
-//     };
-// }

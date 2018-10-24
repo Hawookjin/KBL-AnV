@@ -153,16 +153,3 @@ this.Defensive = function(obj) {
     }
     return data;
 };
-//
-// this.player = function(obj) {
-//     var data = {};
-//     for (key in teamName) {
-//         var temp = [];
-//         for (var c = 0; c < (obj[key]).length; c++) {
-//             temp.push(obj[key][c]["선수"]);
-//         }
-//
-//         data[key] = temp ;
-//     }
-//     return data;
-// };
