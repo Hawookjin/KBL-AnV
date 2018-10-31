@@ -7,6 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
 </head>
 <style>
 </style>
@@ -22,39 +25,44 @@
     <div class="section">
         <h2>선수별 목록</h2>
         <div class="article menu">
-            <!--<form method="GET" action="/">-->
-            <!--<select name="pickedYear" class="form-control">-->
-            <!--<option value="2015-2016">2015-2016 시즌</option>-->
-            <!--<option value="2016-2017">2016-2017 시즌</option>-->
-            <!--<option value="2017-2018">2017-2018 시즌</option>-->
-            <!--</select>-->
-            <!--<select name="pickedItem" class="form-control">-->
-            <!--<option value="usg">USG</option>-->
-            <!--<option value="efg">EFG%</option>-->
-            <!--<optmion value="TS">TS%</optmion>-->
-            <!--<option value="TOR">TOR</option>-->
-            <!--<option value="Ast">AST</option>-->
-            <!--<option value="PPG">PPG</option>-->
-            <!--<option value="RPG">RPG</option>-->
-            <!--<option value="STL">STL</option>-->
-            <!--<option value="Offensive">Defensive</option>-->
-            <!--<option value="Defensive">Offensive</option>-->
-            <!--</select>-->
-            <!--<button type="submit" class="btn btn-default">그래프 만들기</button>-->
-            <!--</form>-->
+            <form method="GET" action="/player">
+                <div role="tabpanel"> <!-- 1패널 -->
+                    <ul class="nav nav-tabs" role="tablist"> <!-- 1패널 연도 탭 제목 --> <!-- j = 연도 -->
+                        <% for(var j=0; j<Object.keys(tiD).length ; j++) { %>
+                        <li role="presentation" class=""><a href="#<%= Object.keys(tiD)[j] %>" aria-controls="year2015" role="tab" data-toggle="tab"><%= Object.keys(tiD)[j] %></a></li>
+                        <% } %>
+                    </ul>
+                    <div class="tab-content"> <!-- 1패널 연도 탭 내용 --> <!-- i = [0,1,2] -->
+                        <% for(var i=0; i<Object.keys(tiD).length ; i++) { %>
+                        <div role="tabpanel" class="tab-pane" id="<%= Object.keys(tiD)[i] %>"> <!-- 2패널 -->
+                            <ul class="nav nav-tabs teamtab" role="tablist"> <!-- 2패널 팀 탭 제목 -->
+                                <% var y = Object.keys(tiD)[i] %> <!-- y = ["2015-2016", "2016-2017", "2017-2018"] -->
+                                <% for(var j=0; j<Object.keys(tiD[y]).length ; j++) { %> <!-- j = [0,1,2,3,4,5,6,7,8,9] -->
+                                <li value="<%= Object.keys(tiD[y])[j] %>" name="teamName" role="presentation" class=""><a href="#<%= Object.keys(tiD[y])[j] %>" aria-controls="year2015" role="tab" data-toggle="tab"><%= Object.keys(tiD[y])[j] %></a></li>
+                                <% } %>
+                            </ul>
+                            <div class="tab-content teamcontent"> <!-- 2패널 팀 탭 내용 -->
+                                <% for(var j=0; j<Object.keys(tiD[y]).length ; j++) { %>
+                                <div role="tabpanel" class="tab-pane" id="<%= Object.keys(tiD[y])[j] %>">
+                                    <% var t = Object.keys(tiD[y])[j] %>
+                                    <% for(var k=0; k<(tiD[y][t]).length; k++) { %>
+                                    <button value="<%=y%>,<%=Object.keys(tiD[y])[j]%>,<%=tiD[y][t][k]["선수"]%>,<%=k%>" name="playerName" type="submit" class="btn btn-default play"><%= tiD[y][t][k]["선수"] %> </button>
+                                    <% } %>
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+            </form>
         </div>
         <div class="article content">
-            <div class="dis">
-                <h3><%= teamIndex %> </h3>
-                <!--<h5><%= JSON.stringify(teamIndexDescription) %></h5>-->
+            <div class="dis dis_player">
+                <h3><%=dataIndex[2]%></h3>
+                <h5><%=dataIndex[1]%>, <%=dataIndex[0]%> 시즌</h5>
                 <!--<ul>-->
-                <% var teams = Object.values(teamIndexDescription) %>
-                <% for(var i=0; i<teams.length; i++) {%>
-                <h5 class="teamName"><%= Object.keys(teamIndexDescription)[i] %></h5>
-                <% for(var j=0; j<teams[i].length; j++) {%>
-                <button><%= teams[i][j] %></button>
-                <% } %>
-                <% } %>
+                <canvas id="radar-chart" width="800" height="600"></canvas>
                 <!--</ul>-->
             </div>
             <canvas id="radar-chart" width="800" height="600"></canvas>
@@ -72,32 +80,34 @@
     new Chart(document.getElementById("radar-chart"), {
         type: 'radar',
         data: {
-            labels: ["G(게임수)", "공격:2P(2점슛개수) 수비:OFF(공격리바운드개수)", "공격:3P(3점슛개수) 수비:DEF(수비리바운드개수)", "공격:FT(자유투개수) 수비:STL(스틸개수)", "공격:Ast(어시스트) 수비:BS(블락개수)"],
+            labels: ["공격:PPG(경기당평균득점) 수비:RPG(경기당리바운드개수)", "공격:2P(2점슛개수) 수비:DEF(수비리바운드개수)", "공격:3P(3점슛개수) 수비:OFF(공격리바운드개수)", "공격:FT(자유투개수) 수비:BS(블락개수)", "공격:Ast(어시스트) 수비:STL(스틸개수)"],
             datasets: [
                 {
                     label: "공격",
                     fill: true,
-                    backgroundColor: "rgba(179,181,198,0.2)",
-                    borderColor: "rgba(179,181,198,1)",
+                    backgroundColor: "rgba(255,0,0,0.2)",
+                    borderColor: "rgba(255,0,0,1)",
                     pointBorderColor: "#fff",
-                    pointBackgroundColor: "rgba(179,181,198,1)",
-                    data: [<%= %>]
-                }, {
+                    pointBackgroundColor: "rgba(255,0,0,1)",
+                    data: [<%= AtdataArray[0] %>, <%= AtdataArray[1] %>, <%= AtdataArray[2] %>, <%= AtdataArray[3] %>, <%= AtdataArray[4] %>]
+                },
+                {
                     label: "수비",
                     fill: true,
-                    backgroundColor: "rgba(255,99,132,0.2)",
-                    borderColor: "rgba(255,99,132,1)",
+                    backgroundColor: "rgba(0,128,0,0.2)",
+                    borderColor: "rgba(0,128,0,1)",
                     pointBorderColor: "#fff",
-                    pointBackgroundColor: "rgba(255,99,132,1)",
-                    pointBorderColor: "#fff",
-                    data: [25.48,54.16,7.61,8.06,4.45]
+                    pointBackgroundColor: "rgba(0,128,0,1)",
+                    data: [<%= DfdataArray[0] %>, <%= DfdataArray[1] %>, <%= DfdataArray[2] %>, <%= DfdataArray[3] %>, <%= DfdataArray[4] %>]
                 }
             ]
         },
         options: {
             title: {
-                display: true,
-                text: '선수 스텟'
+                display: true
+            },
+            legend: {
+                display: true
             }
         }
     });

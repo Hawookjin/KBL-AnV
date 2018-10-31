@@ -30,10 +30,24 @@ module.exports = function(app) {
         });
     });
 
-    app.get('/player', function (req, res) {
+    app.get('/player', function(req, res) {
         fs.readFile('myjsonfile.json', 'utf8', function (err, data) {
             var obj = JSON.parse(data);
-            // for (var year in yearName) {
+            var reqName = req.query.playerName;
+            if(reqName) {
+                var splitArray = reqName.split(",");
+                var AttackdataArray = [obj[splitArray[0]][splitArray[1]][splitArray[3]]["PPG"], obj[splitArray[0]][splitArray[1]][splitArray[3]]["2P"],
+                    obj[splitArray[0]][splitArray[1]][splitArray[3]]["3P"], obj[splitArray[0]][splitArray[1]][splitArray[3]]["FT"], obj[splitArray[0]][splitArray[1]][splitArray[3]]["Ast"]]
+
+                var DeffensivedataArray =[obj[splitArray[0]][splitArray[1]][splitArray[3]]["RPG"], obj[splitArray[0]][splitArray[1]][splitArray[3]]["Defensive"],
+                    obj[splitArray[0]][splitArray[1]][splitArray[3]]["Offensive"], obj[splitArray[0]][splitArray[1]][splitArray[3]]["BS"], obj[splitArray[0]][splitArray[1]][splitArray[3]]["STL"]]
+            }
+            else {
+                var splitArray = ["미정", "미정", "선수를 선택해주세요.", 0];
+                var AttackdataArray = [0,0,0,0,0];
+                var DeffensivedataArray = [0,0,0,0,0];
+            }
+            console.log(splitArray[0] + " " + splitArray[1] + " " + splitArray[2] + " " + splitArray[3]);
             var yearWithTeam = {};
             var years = ["2015-2016", "2016-2017", "2017-2018"];
             for (var year in years) {
@@ -48,12 +62,14 @@ module.exports = function(app) {
                 }
                 yearWithTeam[y] = playerWithTeam;
             }
-            // }
             res.render('player', {
                 title: "한국프로농구 데이터시각화 프로젝트",
-                teamYear: 2,
-                teamIndex: 3,
-                tiD: yearWithTeam,
+                teamYear: 1,
+                teamIndex: "선수 정보",
+                tiD: obj,
+                AtdataArray: AttackdataArray,
+                DfdataArray : DeffensivedataArray,
+                dataIndex: splitArray
             });
         });
     });

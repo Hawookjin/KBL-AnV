@@ -111,7 +111,7 @@ this.STL = function(obj) {
     for (key in teamName) {
         var temp = 0; var nanCount = 0;
         for (var c = 0; c < (obj[key]).length; c++) {
-            temp += Number(obj[key][c]["STL"])
+            temp += Number(obj[key][c]["STL"]);
             if(isNaN(temp)) {
                 nanCount++;
                 continue;
@@ -153,3 +153,4 @@ this.Defensive = function(obj) {
     }
     return data;
 };
+

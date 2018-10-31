@@ -2,7 +2,6 @@
 // github : github.com/Hawookjin/
 
 var teamFunction = require("./teamFunction");
-var Playerfuntion = require("./playerfunc");
 
 this.getTeamData = function(index, obj) {
     var indexTitle, teamData, indexDescription;
