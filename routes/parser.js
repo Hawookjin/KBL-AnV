@@ -20,7 +20,7 @@ this.getTeamData = function(index, obj) {
     } else if (index == "Ast") {
         indexTitle = "Ast↑";
         teamData = teamFunction.Ast(obj);
-        indexDescription = "골대 근처에서 바로 득점할 기회가 있는 같은 팀 선수에게 패스하는 빈도를 나타내는 지표이다."
+        indexDescription = "골대 근처에서 바로 득점할 기회가 있는 같은 팀 선수에게 패스하는 빈도를 나타내는 지표이다.(Ast레이팅)"
     } else if (index == "PPG") {
         indexTitle = "PPG↑";
         teamData = teamFunction.PPG(obj);

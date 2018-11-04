@@ -61,9 +61,9 @@
             <div class="dis dis_player">
                 <h3><%=dataIndex[2]%></h3>
                 <h5><%=dataIndex[1]%>, <%=dataIndex[0]%> 시즌</h5>
-                <!--<ul>-->
+
                 <canvas id="radar-chart" width="800" height="600"></canvas>
-                <!--</ul>-->
+
             </div>
             <canvas id="radar-chart" width="800" height="600"></canvas>
         </div>
@@ -89,7 +89,7 @@
                     borderColor: "rgba(255,0,0,1)",
                     pointBorderColor: "#fff",
                     pointBackgroundColor: "rgba(255,0,0,1)",
-                    data: [<%= AtdataArray[0] %>, <%= AtdataArray[1] %>, <%= AtdataArray[2] %>, <%= AtdataArray[3] %>, <%= AtdataArray[4] %>]
+                    data: [<%= AtdataArray %>]
                 },
                 {
                     label: "수비",
@@ -98,7 +98,7 @@
                     borderColor: "rgba(0,128,0,1)",
                     pointBorderColor: "#fff",
                     pointBackgroundColor: "rgba(0,128,0,1)",
-                    data: [<%= DfdataArray[0] %>, <%= DfdataArray[1] %>, <%= DfdataArray[2] %>, <%= DfdataArray[3] %>, <%= DfdataArray[4] %>]
+                    data: [<%= DfdataArray %>]
                 }
             ]
         },

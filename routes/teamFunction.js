@@ -26,7 +26,7 @@ this.TS = function(obj) {
     for (key in teamName) {
         var temp = 0; var sum= 0; var nanCount = 0;
         for (var c = 0; c < (obj[key]).length; c++) {
-            temp =  Number(obj[key][c]["2P"]) + Number(obj[key][c]["3P"]);
+            temp =  Number(obj[key][c]["PTS"]);
             temp = temp / (2 * ((Number(obj[key][c]["2PA"]) + Number(obj[key][c]["3PA"])) + (0.44 * (Number(obj[key][c]["FTA"]))))) * 100;
             if(isNaN(temp)) {
                 nanCount++;

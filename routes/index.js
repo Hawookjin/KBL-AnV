@@ -18,7 +18,6 @@ module.exports = function(app) {
             teamData = {};
             tit = "";
             var getTeamData = parser.getTeamData(getTeamIndex, obj[getTeamYear]);
-
             res.render('index', {
                 title: "한국프로농구 데이터시각화 프로젝트",
                 teamIndex: getTeamData[0],
@@ -47,7 +46,8 @@ module.exports = function(app) {
                 var AttackdataArray = [0,0,0,0,0];
                 var DeffensivedataArray = [0,0,0,0,0];
             }
-            console.log(splitArray[0] + " " + splitArray[1] + " " + splitArray[2] + " " + splitArray[3]);
+            console.log(reqName);
+            console.log(splitArray[0] + " " + splitArray[1] + " " + splitArray[2] + " " + splitArray[3]);//splitArray[0]시즌, splitArray[1]팀, splitArray[2] 선수이름, splitArray[3] 선수배열번호
             var yearWithTeam = {};
             var years = ["2015-2016", "2016-2017", "2017-2018"];
             for (var year in years) {
